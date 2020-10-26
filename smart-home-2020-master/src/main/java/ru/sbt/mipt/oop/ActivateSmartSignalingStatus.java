@@ -14,7 +14,7 @@ public class ActivateSmartSignalingStatus implements SmartSignalingStatus {
 
     @Override
     public void deactivate(int code) {
-        if (smartSignaling.getCode()== code){
+        if (smartSignaling.checkPassword(code)){
             SmartSignalingStatus deactivateSmartSignalingStatus = new DeactivateSmartSignalingStatus(smartSignaling);
             smartSignaling.newStatus(deactivateSmartSignalingStatus);
         }

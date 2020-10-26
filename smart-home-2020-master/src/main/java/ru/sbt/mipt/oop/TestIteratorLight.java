@@ -1,23 +1,30 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package ru.sbt.mipt.oop;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class TestIteratorLight {
+    public TestIteratorLight() {
+    }
+
     @Test
     void testIteratorLight() {
         HomeReader reader = new JsonHomeReader();
         SmartHome smartHome = reader.homeReader("smart-home-1.js");
-        Collection<Room> rooms = smartHome.getRooms();
-        rooms.forEach(room -> room.getLights().forEach(light -> light.execute(new Action() {
-            @Override
-            public void begin(Object act) {
-                assertTrue(act instanceof Light);
+        smartHome.execute((object) -> {
+            if (object instanceof Light) {
+                ((Light)object).execute(new Action() {
+                    public void begin(Object act) {
+                        Assertions.assertTrue(act instanceof Light);
+                    }
+                });
             }
-        })));
-    }
 
+        });
+    }
 }

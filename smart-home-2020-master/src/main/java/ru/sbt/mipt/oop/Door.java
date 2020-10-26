@@ -24,6 +24,5 @@ public class Door implements Actionable{
     @Override
     public void execute(Action action) {
         action.begin(this);
-        action.begin(this);
     }
 }

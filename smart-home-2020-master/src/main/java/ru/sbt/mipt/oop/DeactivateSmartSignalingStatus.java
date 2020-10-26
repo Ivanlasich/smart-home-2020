@@ -1,5 +1,4 @@
 package ru.sbt.mipt.oop;
-
 public class DeactivateSmartSignalingStatus implements SmartSignalingStatus{
     private SmartSignaling smartSignaling;
 
@@ -9,7 +8,7 @@ public class DeactivateSmartSignalingStatus implements SmartSignalingStatus{
 
     @Override
     public void activate(int code) {
-        if (smartSignaling.getCode()== code){
+        if (smartSignaling.checkPassword(code)){
             SmartSignalingStatus activateSmartSignalingStatus = new ActivateSmartSignalingStatus(smartSignaling);
             smartSignaling.newStatus(activateSmartSignalingStatus);
         }

@@ -1,47 +1,46 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package ru.sbt.mipt.oop;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ru.sbt.mipt.oop.SensorEventType.DOOR_CLOSED;
-import static ru.sbt.mipt.oop.SensorEventType.DOOR_OPEN;
-
 public class TestHallDoorProcessEvent {
+    public TestHallDoorProcessEvent() {
+    }
+
     @Test
     void doorNotChange() {
         HomeReader reader = new JsonHomeReader();
         SmartHome smartHome = reader.homeReader("smart-home-1.js");
-
         String id = "4";
-        SensorEvent event = new SensorEvent(DOOR_OPEN, id);
-
+        SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, id);
         EventProcessor processEvent = new DoorsEventProcessor();
         processEvent.process(smartHome, event);
-
-        for (Room room : smartHome.getRooms()) {
-            for (Door door : room.getDoors()) {
-                if (door.getId().equals("3")) {
-                    assertTrue(door.isOpen());
-                }
+        smartHome.execute((object) -> {
+            if (object instanceof Door && ((Door)object).getId().equals("3")) {
+                Assertions.assertTrue(((Door)object).isOpen());
             }
-        }
+
+        });
     }
 
     @Test
     void closeHallDoorLightNotIsOn() {
         HomeReader reader = new JsonHomeReader();
         SmartHome smartHome = reader.homeReader("smart-home-1.js");
-
         String id = "4";
-        SensorEvent event = new SensorEvent(DOOR_CLOSED, id);
-
+        SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, id);
         EventProcessor processEvent = new HallDoorEventProcessor();
         processEvent.process(smartHome, event);
-        for (Room room : smartHome.getRooms()) {
-            for (Light light : room.getLights()) {
-                assertTrue(! light.isOn());
+        smartHome.execute((object) -> {
+            if (object instanceof Light) {
+                Assertions.assertTrue(!((Light)object).isOn());
             }
-        }
-    }
 
+        });
+    }
 }

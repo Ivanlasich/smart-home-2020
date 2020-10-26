@@ -4,8 +4,12 @@ public class SmartSignaling {
     private SmartSignalingStatus status;
     private int code;
 
-    public int getCode() {
+    private int getCode() {
         return code;
+    }
+
+    public boolean checkPassword(int password){
+        return password==this.code;
     }
 
     public SmartSignaling(int code) {
