@@ -3,10 +3,16 @@ package ru.sbt.mipt.oop;
 public class SensorEvent {
     private final SensorEventType type;
     private final String objectId;
+    private final int code;
 
     public SensorEvent(SensorEventType type, String objectId) {
         this.type = type;
         this.objectId = objectId;
+        this.code = 1234;
+    }
+
+    public int getCode() {
+        return code;
     }
 
     public SensorEventType getType() {
