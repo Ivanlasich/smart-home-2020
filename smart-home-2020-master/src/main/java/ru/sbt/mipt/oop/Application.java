@@ -1,35 +1,38 @@
 package ru.sbt.mipt.oop;
+import java.util.Arrays;
+import java.util.List;
 
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static ru.sbt.mipt.oop.SensorEventType.*;
 
 public class Application {
+    private final EventCreator eventCreator;
+    private final SmartHome smartHome;
+    private final EventManager eventManager;
 
-    public static void main(String... args) throws IOException {
-        // считываем состояние дома из файла
-        HomeReader reader = new JsonHomeReader();
-        SmartHome smartHome = reader.homeReader("smart-home-1.js");
-        // начинаем цикл обработки событий
-        EventCreator creator = new ImpEventCreator();
-        SensorEvent event = creator.getNextEvent();
-        ProcessEvent processLight, processDoors;
-        processLight = new LightProcessEvent();
-        processDoors = new DoorsProcessEvent();
-        while (event != null) {
-            System.out.println("Got event: " + event);
-            if (event.getType() == LIGHT_ON || event.getType() == LIGHT_OFF) {
-                processLight.process(smartHome, event);
-            }
-            if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
-                processDoors.process(smartHome, event);
-            }
-            event = creator.getNextEvent();
-        }
+
+    public Application(EventCreator eventCreator, SmartHome smartHome, EventManager eventManager) {
+        this.eventCreator = eventCreator;
+        this.smartHome = smartHome;
+        this.eventManager = eventManager;
     }
 
+    public void run(){
+        List<EventProcessor> processEvents = getEvent();
+        eventManager.manage(processEvents);
+    }
+
+    private List<EventProcessor> getEvent(){
+        return Arrays.asList(new SmsSendingDecorator(new LightEventProcessor()), new SmsSendingDecorator(new DoorsEventProcessor()), new SmsSendingDecorator(new HallDoorEventProcessor()), new SmsSendingDecorator(new SignalingEventProcessor()));
+    }
+    public static void main(String... args) {
+        // считываем состояние дома из файла
+        HomeReader reader = new JsonHomeReader();
+        if(reader != null){
+            SmartHome smartHome = reader.homeReader("smart-home-1.js");
+            smartHome.setSmartSignaling(new SmartSignaling(1234));
+            EventCreator creator = new DummyRandomEventCreator();
+            EventManager eventManager = new LoopEventManager(creator, smartHome);
+            Application application = new Application(creator, smartHome, eventManager);
+            application.run();
+        }
+    }
 }
