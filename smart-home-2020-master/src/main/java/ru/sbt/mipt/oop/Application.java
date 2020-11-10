@@ -21,7 +21,7 @@ public class Application {
     }
 
     private List<EventProcessor> getEvent(){
-        return Arrays.asList(new EventProcessorDecorator(new LightEventProcessor()), new EventProcessorDecorator(new DoorsEventProcessor()), new EventProcessorDecorator(new HallDoorEventProcessor()), new EventProcessorDecorator(new SignalingEventProcessor()));
+        return Arrays.asList(new SmsSendingDecorator(new LightEventProcessor()), new SmsSendingDecorator(new DoorsEventProcessor()), new SmsSendingDecorator(new HallDoorEventProcessor()), new SmsSendingDecorator(new SignalingEventProcessor()));
     }
     public static void main(String... args) {
         // считываем состояние дома из файла

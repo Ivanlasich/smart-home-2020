@@ -30,4 +30,5 @@ public class SignalingSmartSignalingStatus implements SmartSignalingStatus {
         SmartSignalingStatus signalingSmartSignalingStatus = new SignalingSmartSignalingStatus(smartSignaling);
         smartSignaling.newStatus(signalingSmartSignalingStatus);
     }
+
 }

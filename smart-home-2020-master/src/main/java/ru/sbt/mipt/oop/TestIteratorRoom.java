@@ -16,7 +16,7 @@ public class TestIteratorRoom {
         Assertions.assertTrue(room instanceof Room);
     }
 
-    @Test
+    @org.junit.Test
     void testIteratorRoom() {
         HomeReader reader = new JsonHomeReader();
         SmartHome smartHome = reader.homeReader("smart-home-1.js");

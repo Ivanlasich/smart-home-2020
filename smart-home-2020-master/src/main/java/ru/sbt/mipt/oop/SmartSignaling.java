@@ -17,7 +17,7 @@ public class SmartSignaling {
         this.code = code;
     }
 
-    public SmartSignalingStatus getStatus() {
+    private SmartSignalingStatus getStatus() {
         return status;
     }
 
@@ -35,6 +35,13 @@ public class SmartSignaling {
 
     public void newStatus(SmartSignalingStatus status){
         this.status = status;
+    }
+
+    public boolean isAlarmed(){
+        if(this.getStatus() instanceof SignalingSmartSignalingStatus){
+            return true;
+        }
+        return false;
     }
 
 }

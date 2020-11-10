@@ -2,6 +2,7 @@ package ru.sbt.mipt.oop;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestDeactivateSmartSignaling {
@@ -10,7 +11,7 @@ public class TestDeactivateSmartSignaling {
         SmartSignaling smartSignaling = new SmartSignaling(1234);
         smartSignaling.activate(1234);
         smartSignaling.deactivate(1234);
-        assertTrue(smartSignaling.getStatus() instanceof  DeactivateSmartSignalingStatus);
+        assertFalse(smartSignaling.isAlarmed());
     }
 
     @Test
@@ -18,7 +19,7 @@ public class TestDeactivateSmartSignaling {
         SmartSignaling smartSignaling = new SmartSignaling(1234);
         smartSignaling.activate(1234);
         smartSignaling.deactivate(1233);
-        assertTrue(smartSignaling.getStatus() instanceof SignalingSmartSignalingStatus);
+        assertTrue(smartSignaling.isAlarmed());
     }
 
 }

@@ -30,6 +30,4 @@ public class DeactivateSmartSignalingStatus implements SmartSignalingStatus{
         smartSignaling.newStatus(signalingSmartSignalingStatus);
 
     }
-
-
 }
