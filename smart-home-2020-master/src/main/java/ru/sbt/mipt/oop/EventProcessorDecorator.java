@@ -1,9 +1,9 @@
 package ru.sbt.mipt.oop;
 
-public class EventProcessorDecorator implements EventProcessor {
+public class SmsSendingDecorator implements EventProcessor {
     private final EventProcessor eventProcessor;
 
-    public EventProcessorDecorator(EventProcessor eventProcessor) {
+    public SmsSendingDecorator(EventProcessor eventProcessor) {
         this.eventProcessor = eventProcessor;
     }
 
@@ -24,3 +24,4 @@ public class EventProcessorDecorator implements EventProcessor {
 
     }
 }
+
