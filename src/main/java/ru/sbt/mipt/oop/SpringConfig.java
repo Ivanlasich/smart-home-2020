@@ -5,15 +5,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @Configuration
 public class SpringConfig {
 
     @Bean
-    public List<EventProcessor> events(){
-        List<EventProcessor> events = Arrays.asList(new LightEventProcessor(), new DoorsEventProcessor(), new HallDoorEventProcessor(), new SignalingEventProcessor());
-        return events;
+    public  HashMap<String, SensorEventType> getAdapter(){
+        return  new HashMap<String, SensorEventType>() {
+            {
+                put("LightIsOn", SensorEventType.LIGHT_ON);
+                put("LightIsOff", SensorEventType.LIGHT_OFF);
+                put("DoorIsOpen", SensorEventType.DOOR_OPEN);
+                put("DoorIsClosed", SensorEventType.DOOR_CLOSED);
+            }
+        };
     }
 
     @Bean
@@ -27,28 +35,27 @@ public class SpringConfig {
     }
 
     @Bean
-    public EventProcessor lightEventProcessor(){
-        return new LightEventProcessor();
+    public EventProcessorAdapter lightEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
+        return  new EventProcessorAdapter(new LightEventProcessor(), smartHome, adapter);
+    }
+    @Bean
+    public EventProcessorAdapter doorsEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
+        return new EventProcessorAdapter(new DoorsEventProcessor(), smartHome(), adapter);
     }
 
     @Bean
-    public EventProcessor doorsEventProcessor(){
-        return new DoorsEventProcessor();
-    }
-
-    @Bean
-    public EventProcessor hallDoorEventProcessor(){
-        return new HallDoorEventProcessor();
+    public EventProcessorAdapter hallDoorEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
+        return new EventProcessorAdapter(new HallDoorEventProcessor(), smartHome, adapter);
     }
 
 
     @Bean
-    public SensorEventsManager sensorEventsManager(SmartHome smartHome, List<EventProcessor> events) {
+    public SensorEventsManager sensorEventsManager(SmartHome smartHome, Collection<EventProcessorAdapter> events) {
 
         SensorEventsManager sensorEventsManager = new SensorEventsManager();
 
-        for (EventProcessor processEvent : events){
-            sensorEventsManager.registerEventHandler(new EventProcessorAdapter(processEvent, smartHome));
+        for (EventProcessorAdapter processEvent : events){
+            sensorEventsManager.registerEventHandler(processEvent);
         }
         return sensorEventsManager;
     }
