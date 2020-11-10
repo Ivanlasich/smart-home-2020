@@ -8,23 +8,18 @@ import java.util.HashMap;
 public class EventProcessorAdapter implements EventHandler{
     private final EventProcessor eventProcessor;
     private final SmartHome smartHome;
-    private final HashMap<String, SensorEventType> adapter = new HashMap<String, SensorEventType>() {
-        {
-            put("LightIsOn", SensorEventType.LIGHT_ON);
-            put("LightIsOff", SensorEventType.LIGHT_OFF);
-            put("DoorIsOpen", SensorEventType.DOOR_OPEN);
-            put("DoorIsClosed", SensorEventType.DOOR_CLOSED);
-        }
-    };
+    private final HashMap<String, SensorEventType> adapter;
 
-    public EventProcessorAdapter(EventProcessor eventProcessor, SmartHome smartHome) {
+    public EventProcessorAdapter(EventProcessor eventProcessor, SmartHome smartHome, HashMap<String, SensorEventType> adapter) {
         this.eventProcessor = eventProcessor;
         this.smartHome = smartHome;
+        this.adapter = adapter;
     }
-
 
     @Override
     public void handleEvent(CCSensorEvent event) {
-        eventProcessor.process(smartHome, new SensorEvent(adapter.get(event.getEventType()), event.getObjectId()));
+        if(adapter.containsKey(event.getEventType())) {
+            eventProcessor.process(smartHome, new SensorEvent(adapter.get(event.getEventType()), event.getObjectId()));
+        }
     }
 }
